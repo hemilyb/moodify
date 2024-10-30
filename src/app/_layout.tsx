@@ -1,5 +1,6 @@
 import { Stack } from "expo-router"
-import { UserContextProvider } from "../context/UserContext"
+import { UserContextProvider } from "./context/UserContext";
+
 const Layout = () => {
 
   return (
@@ -8,7 +9,7 @@ const Layout = () => {
         screenOptions={{
           headerShown: false
         }}
-        initialRouteName="onboarding/index"
+        initialRouteName="(tabs)/dashboard"
       >
         <Stack.Screen name="onboarding/index" />
         <Stack.Screen name="userName/index" />

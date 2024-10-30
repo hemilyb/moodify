@@ -2,8 +2,9 @@ import React, { useContext, useState } from "react";
 import { TextInput, TouchableOpacity, Vibration, View } from "react-native";
 import CustomText from "../components/CustomText";
 import { styles } from "./styles";
-import { UserContext } from "../../context/UserContext";
 import { useRouter } from "expo-router";
+import { UserContext } from "../context/UserContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const UserName = () => {
   const { setUserName } = useContext(UserContext);
@@ -11,8 +12,9 @@ const UserName = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const router = useRouter();
 
-  const handleContinue = () => {
+  const handleContinue = async () => {
     if (inputValue) {
+      await AsyncStorage.setItem("username", inputValue);
       setUserName(inputValue);
       router.push("/dashboard");
     }

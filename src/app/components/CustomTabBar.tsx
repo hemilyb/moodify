@@ -2,11 +2,20 @@ import { TouchableOpacity, View } from "react-native";
 import { AntDesign, Feather, Octicons } from "@expo/vector-icons";
 import { colors } from "../../global/colors";
 import { useContext } from "react";
-import { UserContext } from "../../context/UserContext";
+
 import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
+import { UserContext } from "../context/UserContext";
 
 const CustomTabBar = ({ state, navigation }: BottomTabBarProps) => {
   const { onOpen } = useContext(UserContext);
+
+  const todayMood = () => {
+    const today = new Date();
+    const daysOfWeek = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab"];
+    const day = daysOfWeek[today.getDay()];
+    const date = today.getDate();
+    onOpen(day, date);
+  }
 
   const go = (screenName: string) => {
     navigation.navigate(screenName);
@@ -37,7 +46,7 @@ const CustomTabBar = ({ state, navigation }: BottomTabBarProps) => {
       </TouchableOpacity>
 
       <TouchableOpacity
-        onPress={() => onOpen()}
+        onPress={todayMood}
         style={{
           position: "relative",
           alignItems: "center"

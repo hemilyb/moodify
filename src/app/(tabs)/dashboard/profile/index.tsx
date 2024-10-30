@@ -1,28 +1,18 @@
 import { Image, View } from "react-native";
 import { styles } from "./styles";
 import CustomText from "../../../components/CustomText";
-import { useContext } from "react";
-import { UserContext } from "../../../../context/UserContext";
 import { Feather, Ionicons, MaterialCommunityIcons, MaterialIcons, SimpleLineIcons } from "@expo/vector-icons";
 import CustomTextAccount from "../../../components/CustomTextAccount";
 import { colors } from "../../../../global/colors";
 import { ScrollView } from "react-native-gesture-handler";
+import CustomImagePicker from "../../../components/CustomImagePicker";
 
 const Profile = () => {
-  const { userName } = useContext(UserContext);
 
   return (
     <ScrollView style={{ marginBottom: 20 }}>
-      <View style={styles.header}>
-        <Image
-          source={require("../../../../assets/memoji.png")}
-          style={styles.profileImage}
-        />
-        <Feather name="edit" size={24} style={styles.changeIcon} />
-        <CustomText bold style={styles.text}>
-         {userName}
-        </CustomText>
-      </View>
+
+      <CustomImagePicker />
 
       <View style={styles.container}>
         <CustomText bold style={{ fontSize: 18 }}>

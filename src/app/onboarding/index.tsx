@@ -1,6 +1,6 @@
 import React from "react";
 import { Image, TouchableOpacity, View } from "react-native";
-import logo from "../../assets/logo.png";
+import logo from "../assets/logo.png";
 import { styles } from "./styles";
 import CustomText from "../components/CustomText";
 import { useRouter } from 'expo-router';
