@@ -2,8 +2,8 @@ import { View } from "react-native";
 import CustomText from "../../components/CustomText";
 import { useContext } from "react";
 import { styles } from "./styles";
-import WeeklyMood from '../../components/WeeklyMood';
 import { UserContext } from "../../context/UserContext";
+import WeeklyMood from "../../components/weeklyMood";
 
 const Dashboard = () => {
   const { userName } = useContext(UserContext);

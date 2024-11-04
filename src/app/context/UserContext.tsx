@@ -40,7 +40,7 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({ childr
   const [selectedMood, setSelectedMood] = useState<number | null>(null);
 
   const [note, setNote] = useState({
-    mood: "",
+    mood: 0,
     description: ""
   })
 
@@ -60,13 +60,20 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({ childr
     getUserName();
   }, [])
 
-  const onOpen = (day = "", date = 0) => {
+  const onOpen = async (day = "", date = 0) => {
     setSelectedDay(day);
     setSelectedDate(date);
-    modalizeRef.current?.open()
+    const moodKey = `mood-${day}-${date}`;
+    const savedMood = await AsyncStorage.getItem(moodKey);
+    const moodData = savedMood ? JSON.parse(savedMood) : { mood: 0, description: "" }
+
+    handleNoteChange("mood", moodData.mood);
+    setSelectedMood(moodData.mood)
+    handleNoteChange("description", moodData.description);
+    modalizeRef.current?.open();
   }
 
-  const handleChange = (key: string, value: string) => {
+  const handleNoteChange = (key: string, value: string | number) => {
     setNote(prev => ({
       ...prev,
       [key]: value
@@ -80,7 +87,7 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({ childr
     }
 
     setNote({
-      mood: "",
+      mood: 0,
       description: ""
     });
     setSelectedMood(null);
@@ -100,15 +107,15 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({ childr
         </CustomText>
         <View style={styles.rowContainer}>
           {
-            moodIcon.map((mood, index) => (
-              <TouchableOpacity key={index}
+            moodIcon.map((mood) => (
+              <TouchableOpacity key={mood.id}
                 onPress={() => {
-                  handleChange("mood", mood.name);
-                  setSelectedMood(index)
+                  handleNoteChange("mood", mood.id);
+                  setSelectedMood(mood.id)
                 }}
                 style={[
                   styles.moodIcon,
-                  selectedMood === index
+                  selectedMood === mood.id
                   && { backgroundColor: colors.pink }]}>
                 {mood.icon}
               </TouchableOpacity>
@@ -126,7 +133,7 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({ childr
           multiline
           onContentSizeChange={handleContentSizeChange}
           value={note.description}
-          onChangeText={(value) => handleChange("description", value)}
+          onChangeText={(value) => handleNoteChange("description", value)}
         />
 
         <TouchableOpacity style={styles.button} onPress={handleSaveNote}>
