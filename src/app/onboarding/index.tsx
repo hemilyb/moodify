@@ -1,13 +1,32 @@
-import React from "react";
-import { Image, TouchableOpacity, View } from "react-native";
+import React, { useEffect, useState } from "react";
+import { ActivityIndicator, Image, TouchableOpacity, View } from "react-native";
 import logo from "../assets/logo.png";
 import { styles } from "./styles";
 import CustomText from "../components/CustomText";
 import { useRouter } from 'expo-router';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Onboarding = () => {
+  const [loading, setLoading] = useState(false);
 
   const router = useRouter();
+
+  useEffect(() => {
+    setLoading(false);
+    setTimeout(() => {
+      setLoading(true);
+      checkUsernameExists();
+    }, 3000);
+    
+  }, [])
+
+  const checkUsernameExists = async () => {
+    const username = await AsyncStorage.getItem("username");
+    if (username) {
+      return router.push("/dashboard");
+    }
+    router.push("/userName");
+  }
 
   return (
     <View style={styles.boxOnboarding}>
@@ -18,9 +37,11 @@ const Onboarding = () => {
         source={logo}
         resizeMode="contain"
       />
-      <TouchableOpacity style={styles.button} onPress={() => router.push("/userName")}>
-          <CustomText bold>CONTINUAR</CustomText>
-      </TouchableOpacity>
+      {loading && (
+        <View style={styles.loading}>
+          <ActivityIndicator size="large" color="#007AFF" />
+        </View>
+      )}
     </View>
   )
 }

@@ -16,7 +16,7 @@ const UserName = () => {
     if (inputValue) {
       await AsyncStorage.setItem("username", inputValue);
       setUserName(inputValue);
-      router.push("/dashboard");
+      router.replace("/dashboard");
     }
     else {
       Vibration.vibrate();

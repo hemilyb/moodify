@@ -17,5 +17,9 @@ export const styles = StyleSheet.create({
     paddingVertical: 12,
     borderRadius: 50,
     backgroundColor: colors.pink,
-  }
+  },
+  loading: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
 })
