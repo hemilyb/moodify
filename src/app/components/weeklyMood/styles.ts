@@ -33,8 +33,8 @@ export const styles = StyleSheet.create({
     margin: 4
   },
   descriptionContainer: {
-    marginBottom: 100,
-    paddingHorizontal: 10
+    marginBottom: 50,
+    paddingHorizontal: 4
   },
   border: {
     width: "80%",
@@ -43,24 +43,48 @@ export const styles = StyleSheet.create({
     borderColor: colors.gray,
     borderStyle: "dashed",
     marginBottom: 20,
-    marginTop: 0
+    alignSelf: "center"
   },
   rowDescription: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
   },
-  menuContainer: {
-    position: "absolute",
-    width: 150,
-    right: 20,
-    top: 28,
-    zIndex: 1,
-    backgroundColor: colors.white,
-    borderRadius: 10,
-    elevation: 2
+  optionContainer: {
+    flexDirection: "row",
   },
-  menuButton: {
-    padding: 14
+  buttonOption: {
+    padding: 8
+  },
+  overlay: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  deleteContainer: {
+    position: "absolute",
+    alignSelf: "center",
+    backgroundColor: colors.white,
+    elevation: 4,
+    padding: 12,
+    width: "90%",
+    height: "50%",
+    borderRadius: 20,
+  },
+  iconCircle: {
+    width: 100,
+    height: 100,
+    backgroundColor: colors.pink,
+    borderRadius: 50,
+    alignSelf: "center",
+    marginTop: 30
+  },
+  trashIcon: {
+    margin: "auto",
   }
 })

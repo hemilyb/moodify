@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
-import { FlatList, TouchableOpacity, View, Dimensions, Pressable } from "react-native";
-import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
+import { FlatList, TouchableOpacity, View,ScrollView, Modal, Image } from "react-native";
+import { Feather, FontAwesome, SimpleLineIcons } from "@expo/vector-icons";
 import CustomText from "../CustomText";
 import { UserContext } from "../../context/UserContext";
 import { colors } from "../../../global/colors";
@@ -18,10 +18,10 @@ type MoodData = {
 const WeeklyMood = () => {
   const { onOpen } = useContext(UserContext);
   const [moodData, setMoodData] = useState<MoodData[]>([]);
-  const [openMenu, setOpenMenu] = useState<number | null>(null);
+  const [confirmDelete, setConfirmDelete] = useState<{ day: string, date: number } | null>(null);
 
   useEffect(() => {
-    const moodData = async () => {
+    const fetchMoodData = async () => {
       const daysOfWeek = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab"];
       const today = new Date();
       const moodArray: MoodData[] = [];
@@ -47,7 +47,7 @@ const WeeklyMood = () => {
       setMoodData(moodArray);
     };
 
-    moodData();
+    fetchMoodData();
   }, [moodData]);
 
   const handleOpenModal = (day: string, date: number) => {
@@ -86,24 +86,58 @@ const WeeklyMood = () => {
                 {item.day}
               </CustomText>
             </View>
-            <TouchableOpacity onPress={() => setOpenMenu(openMenu === index ? null : index)}>
-              <MaterialCommunityIcons name="dots-horizontal" size={24} color={colors.gray} />
-            </TouchableOpacity>
-          </View>
 
-          {openMenu === index && (
-            <View style={styles.menuContainer}>
-              <TouchableOpacity style={[styles.menuButton, { borderBottomWidth: 0.25, borderColor: colors.gray }]} onPress={() => handleOpenModal(item.day, item.date)}>
-                <CustomText>Editar</CustomText>
+            <View style={styles.optionContainer}>
+              <TouchableOpacity style={styles.buttonOption} onPress={() => handleOpenModal(item.day, item.date)}>
+                <SimpleLineIcons name="pencil" size={16} color={colors.gray} />
               </TouchableOpacity>
 
-              <TouchableOpacity style={styles.menuButton} onPress={() => removeMoodNote(item.day, item.date)}>
-                <CustomText style={{ color: "red" }}>Deletar</CustomText>
+              <TouchableOpacity style={styles.buttonOption} onPress={() => setConfirmDelete({ day: item.day, date: item.date })}>
+                <FontAwesome name="trash-o" size={16} color={colors.gray} />
               </TouchableOpacity>
             </View>
-          )}
-
+          </View>
           <CustomText style={{ marginTop: 8 }}>{item.description}</CustomText>
+
+          <Modal
+            visible={confirmDelete?.day === item.day && confirmDelete?.date === item.date}
+            transparent={true}
+            animationType="fade"
+            onRequestClose={() => setConfirmDelete(null)}
+          >
+            <View style={styles.overlay}>
+              <View style={styles.deleteContainer}>
+                <View style={styles.iconCircle}>
+                  <Image source={require("../../assets/icon-trash.png")} style={styles.trashIcon} />
+                </View>
+
+                <CustomText bold style={{ alignSelf: "center", marginTop: 20, fontSize: 20 }}>
+                  Deletar essa memória?
+                </CustomText>
+
+                <CustomText style={{ textAlign: "center", marginTop: 20 }}>
+                  Não será possível recuperar notas apagadas. Tem certeza de que deseja continuar?
+                </CustomText>
+
+                <View style={{ flexDirection: "row", justifyContent: "space-between", marginTop: 40, padding: 12 }}>
+                  <TouchableOpacity
+                    onPress={() => removeMoodNote(item.day, item.date)}>
+                    <CustomText style={{ color: "red" }}>
+                      DELETAR
+                    </CustomText>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    onPress={() => setConfirmDelete(null)}>
+                    <CustomText style={{ color: colors.gray }}>
+                      VOLTAR
+                    </CustomText>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+          </Modal>
+
         </View>
       ) : null
     )
@@ -115,7 +149,7 @@ const WeeklyMood = () => {
   }
 
   return (
-    <View>
+    <ScrollView contentContainerStyle={{ paddingBottom: 20 }}>
       <FlatList
         data={moodData}
         keyExtractor={(item, index) => index.toString()}
@@ -124,15 +158,16 @@ const WeeklyMood = () => {
         showsHorizontalScrollIndicator={false}
       />
       <View style={styles.border}></View>
-      <Pressable onPress={() => setOpenMenu(null)}>
+      <View>
         <FlatList
-          data={moodData}
+          data={[...moodData].reverse()}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({ item, index }) => renderDescription(item, index)}
-          style={{ height: Dimensions.get("window").height / 1.5 }}
+          scrollEnabled={false}
         />
-      </Pressable>
-    </View>
+      </View>
+      <View style={{ padding: 100  }} />
+    </ScrollView>
   );
 }
 
