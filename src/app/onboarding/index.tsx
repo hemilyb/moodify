@@ -7,26 +7,19 @@ import { useRouter } from 'expo-router';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Onboarding = () => {
-  const [loading, setLoading] = useState(false);
-
   const router = useRouter();
 
   useEffect(() => {
-    setLoading(false);
-    setTimeout(() => {
-      setLoading(true);
-      checkUsernameExists();
-    }, 3000);
-    
+    const checkUsernameExists = async () => {
+      const username = await AsyncStorage.getItem("username");
+      if (username) {
+        return router.replace("/dashboard");
+      }
+      router.push("/userName");
+    }
+    checkUsernameExists()
   }, [])
 
-  const checkUsernameExists = async () => {
-    const username = await AsyncStorage.getItem("username");
-    if (username) {
-      return router.push("/dashboard");
-    }
-    router.push("/userName");
-  }
 
   return (
     <View style={styles.boxOnboarding}>
@@ -37,11 +30,6 @@ const Onboarding = () => {
         source={logo}
         resizeMode="contain"
       />
-      {loading && (
-        <View style={styles.loading}>
-          <ActivityIndicator size="large" color="#007AFF" />
-        </View>
-      )}
     </View>
   )
 }
